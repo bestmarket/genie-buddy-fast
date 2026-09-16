@@ -54,6 +54,9 @@ function ChatPage() {
   const projectId = workspace.data?.project.id;
   const hasProfile = Boolean(workspace.data?.project.channel_profile);
 
+  const brainstorm = workspace.data?.project.brainstorm ?? null;
+  const brainstormAt = workspace.data?.project.brainstorm_at ?? null;
+
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [text, setText] = useState("");
 
