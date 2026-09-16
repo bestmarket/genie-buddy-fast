@@ -103,7 +103,7 @@ export const getWorkspace = createServerFn({ method: "POST" })
 
     let projects = projectList.data ?? [];
     let project = data?.projectId
-      ? projects.find((candidate) => candidate.id === data.projectId)
+      ? projects.find((candidate) => candidate.id === data.projectId) ?? projects[0]
       : projects[0];
     if (!project) {
       const created = await supabase

@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { createProject, type ChannelProfile } from "@/lib/studio.functions";
 import {
   useRefreshWorkspace,
@@ -41,7 +42,7 @@ function AppLayout() {
   const [name, setName] = useState("");
   const addProject = useMutation({
     mutationFn: useServerFn(createProject),
-    onSuccess: async (project) => {
+    onSuccess: async (project: Tables<"projects">) => {
       await refresh();
       selectProject(project.id);
       setName("");
@@ -144,16 +145,16 @@ function AppLayout() {
       <div className="min-w-0">
         <header className="border-b border-border">
           <nav className="mx-auto flex max-w-4xl gap-1 overflow-x-auto px-4 pt-2">
-          {TABS.map((tab) => (
-            <Link
-              key={tab.to}
-              to={tab.to}
-              className="-mb-px border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              activeProps={{ className: cn("border-primary text-foreground font-medium") }}
-            >
-              {tab.label}
-            </Link>
-          ))}
+            {TABS.map((tab) => (
+              <Link
+                key={tab.to}
+                to={tab.to}
+                className="-mb-px border-b-2 border-transparent px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                activeProps={{ className: cn("border-primary text-foreground font-medium") }}
+              >
+                {tab.label}
+              </Link>
+            ))}
           </nav>
         </header>
         <main className="mx-auto max-w-4xl px-4 py-6">
