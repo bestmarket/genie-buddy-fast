@@ -18,13 +18,15 @@ export function platformLabel(id: string | null | undefined): string {
 /** Every social account the user has added, plus the post history. */
 export const listChannels = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input: unknown) => z.object({ projectId: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const [channels, posts] = await Promise.all([
       supabase
         .from("channels")
         .select("*")
         .eq("user_id", userId)
+        .eq("project_id", data.projectId)
         .order("created_at", { ascending: true }),
       supabase
         .from("posts")
@@ -35,7 +37,11 @@ export const listChannels = createServerFn({ method: "POST" })
     ]);
     if (channels.error) throw new Error(channels.error.message);
     if (posts.error) throw new Error(posts.error.message);
-    return { channels: channels.data ?? [], posts: posts.data ?? [] };
+    const channelIds = new Set((channels.data ?? []).map((channel) => channel.id));
+    return {
+      channels: channels.data ?? [],
+      posts: (posts.data ?? []).filter((post) => channelIds.has(post.channel_id)),
+    };
   });
 
 export const saveChannel = createServerFn({ method: "POST" })

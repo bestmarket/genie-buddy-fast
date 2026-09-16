@@ -7,3 +7,4 @@
 - [x] Production layer (captions, transitions, music, SFX) — runs in the browser during assembly; true server-side rendering needs an external render service (blocked: no video encoder available on the hosting runtime)
 - [x] Re-import into fresh Lovable project (code copied, Cloud enabled, schema applied)
 - [x] Wire brainstorm analysis into the chat so analysed text appears there automatically
+- [x] Add a project panel with project titles, analysed styles, creation and switching

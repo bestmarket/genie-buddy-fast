@@ -87,20 +87,24 @@ export function styleLook(id: string | null | undefined): string {
 /** Creates the user's channel workspace if they don't have one yet. */
 export const getWorkspace = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input: unknown) =>
+    z.object({ projectId: z.string().uuid().optional() }).optional().parse(input),
+  )
+  .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    const existing = await supabase
+    const projectList = await supabase
       .from("projects")
       .select("*")
       .eq("user_id", userId)
-      .order("created_at", { ascending: true })
-      .limit(1)
-      .maybeSingle();
+      .order("created_at", { ascending: true });
 
-    if (existing.error) throw new Error(existing.error.message);
+    if (projectList.error) throw new Error(projectList.error.message);
 
-    let project = existing.data;
+    let projects = projectList.data ?? [];
+    let project = data?.projectId
+      ? projects.find((candidate) => candidate.id === data.projectId)
+      : projects[0];
     if (!project) {
       const created = await supabase
         .from("projects")
@@ -109,6 +113,7 @@ export const getWorkspace = createServerFn({ method: "POST" })
         .single();
       if (created.error) throw new Error(created.error.message);
       project = created.data;
+      projects = [created.data];
     }
 
     const [sources, ideas, scripts, videos] = await Promise.all([
@@ -136,11 +141,27 @@ export const getWorkspace = createServerFn({ method: "POST" })
 
     return {
       project,
+      projects,
       sources: sources.data ?? [],
       ideas: ideas.data ?? [],
       scripts: scripts.data ?? [],
       videos: videos.data ?? [],
     };
+  });
+
+export const createProject = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({ name: z.string().trim().min(1).max(80) }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const result = await context.supabase
+      .from("projects")
+      .insert({ user_id: context.userId, name: data.name })
+      .select("*")
+      .single();
+    if (result.error) throw new Error(result.error.message);
+    return result.data;
   });
 
 export const addSource = createServerFn({ method: "POST" })

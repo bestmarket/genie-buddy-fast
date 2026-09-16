@@ -43,9 +43,11 @@ function ChannelsPage() {
   const queryClient = useQueryClient();
   const fetchChannels = useServerFn(listChannels);
   const workspace = useWorkspace();
+  const projectId = workspace.data?.project.id;
   const data = useQuery({
-    queryKey: channelsKey,
-    queryFn: () => fetchChannels({ data: undefined }),
+    queryKey: [...channelsKey, projectId],
+    queryFn: () => fetchChannels({ data: { projectId: projectId ?? "" } }),
+    enabled: Boolean(projectId),
   });
 
   const [platform, setPlatform] = useState<string>("youtube");
