@@ -5,5 +5,5 @@
 - [x] Verify build, routes, sign-up/sign-in, one create/read flow
 - [x] Real per-video source analysis: transcript fetching + LLM analysis, one-by-one progress bar on Sources
 - [x] Production layer (captions, transitions, music, SFX) — runs in the browser during assembly; true server-side rendering needs an external render service (blocked: no video encoder available on the hosting runtime)
-- [ ] Re-import into fresh Lovable project (code copied, Cloud enabled, schema applied) — verify pages load
-- [ ] Wire brainstorm analysis into the chat so analysed text appears there automatically
+- [x] Re-import into fresh Lovable project (code copied, Cloud enabled, schema applied)
+- [x] Wire brainstorm analysis into the chat so analysed text appears there automatically
