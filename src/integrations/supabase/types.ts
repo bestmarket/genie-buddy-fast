@@ -197,6 +197,8 @@ export type Database = {
       }
       projects: {
         Row: {
+          brainstorm: string | null
+          brainstorm_at: string | null
           channel_profile: Json | null
           created_at: string
           id: string
@@ -205,6 +207,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          brainstorm?: string | null
+          brainstorm_at?: string | null
           channel_profile?: Json | null
           created_at?: string
           id?: string
@@ -213,6 +217,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          brainstorm?: string | null
+          brainstorm_at?: string | null
           channel_profile?: Json | null
           created_at?: string
           id?: string
@@ -272,6 +278,81 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      source_videos: {
+        Row: {
+          analysis: Json | null
+          created_at: string
+          error: string | null
+          id: string
+          position: number
+          project_id: string
+          published_at: string | null
+          source_id: string
+          status: string
+          thumbnail_url: string | null
+          title: string | null
+          transcript: string | null
+          transcript_source: string | null
+          updated_at: string
+          url: string
+          user_id: string
+          video_id: string
+        }
+        Insert: {
+          analysis?: Json | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          position?: number
+          project_id: string
+          published_at?: string | null
+          source_id: string
+          status?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          transcript?: string | null
+          transcript_source?: string | null
+          updated_at?: string
+          url: string
+          user_id: string
+          video_id: string
+        }
+        Update: {
+          analysis?: Json | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          position?: number
+          project_id?: string
+          published_at?: string | null
+          source_id?: string
+          status?: string
+          thumbnail_url?: string | null
+          title?: string | null
+          transcript?: string | null
+          transcript_source?: string | null
+          updated_at?: string
+          url?: string
+          user_id?: string
+          video_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "source_videos_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "source_videos_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
             referencedColumns: ["id"]
           },
         ]
