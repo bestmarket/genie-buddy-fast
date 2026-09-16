@@ -128,7 +128,18 @@ function ChatPage() {
       <section className="flex h-[26rem] flex-col rounded-lg border border-border">
         <Conversation>
           <ConversationContent>
-            {messages.length === 0 ? (
+            {brainstorm ? (
+              <Message from="assistant">
+                <MessageContent>
+                  <p className="mb-2 text-xs font-medium text-muted-foreground">
+                    Brainstorm from your analysed videos
+                    {brainstormAt ? ` · ${new Date(brainstormAt).toLocaleString()}` : ""}
+                  </p>
+                  <MessageResponse>{brainstorm}</MessageResponse>
+                </MessageContent>
+              </Message>
+            ) : null}
+            {messages.length === 0 && !brainstorm ? (
               <p className="m-auto max-w-xs text-center text-sm text-muted-foreground">
                 Ask about angles, titles or how to improve a script. The assistant knows your
                 channel, its ideas and its scripts.
